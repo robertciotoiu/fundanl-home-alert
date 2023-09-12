@@ -26,11 +26,11 @@ public class EmailNotifier implements Notifier {
         var body = "Hey there, \n\n" +
                 "I found " + newListing.size() + " new listings for you! \n\n" +
                 "Here they are: \n\n" + newListing + "\n\n";
-
-        sendEmail(to, subject, body);
+        String[] recipients = this.to.split(",");
+        sendEmail(recipients, subject, body);
     }
 
-    private void sendEmail(String to, String subject, String body) {
+    private void sendEmail(String[] to, String subject, String body) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
         message.setSubject(subject);

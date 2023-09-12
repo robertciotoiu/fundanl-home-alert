@@ -1,6 +1,7 @@
 package com.robertciotoiu;
 
 import com.robertciotoiu.connection.AbstractClient;
+import com.robertciotoiu.index.ListingFileWriter;
 import com.robertciotoiu.notification.Notifier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -25,6 +27,8 @@ public class HomeAlerterService {
     private Notifier notifier;
     @Autowired
     private ListingExtractor listingExtractor;
+    @Autowired
+    ListingFileWriter listingFileWriter;
     Map<String, Listing> cache = new HashMap<>();
     private boolean isWarmup = true;
 
@@ -41,15 +45,31 @@ public class HomeAlerterService {
             }
         });
 
+        storeListings(listingsToNotify);
         sendNotification(listingsToNotify);
+        cleanupCache(newListings);
     }
 
-    private void sendNotification(ArrayList<Listing> listingsToNotify) {
+    private void storeListings(ArrayList<Listing> listingsToNotify) {
+        if(!listingsToNotify.isEmpty() && !isWarmup) {
+            listingFileWriter.appendListingsToFile(listingsToNotify);
+        }
+    }
+
+    private void sendNotification(List<Listing> listingsToNotify) {
         if(!listingsToNotify.isEmpty() && !isWarmup) {
             notifier.notify(listingsToNotify);
             System.out.println("Notified about " + listingsToNotify.size() + " new listings!");
         }
 
         isWarmup = false;
+    }
+
+    private void cleanupCache(List<Listing> listings) {
+        if(cache.size() > 100) {
+            cache.clear();
+            listings.forEach(listing -> cache.put(listing.getUrl(), listing));
+            System.out.println("Cache cleaned up!");
+        }
     }
 }
