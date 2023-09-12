@@ -9,7 +9,6 @@ import java.util.List;
 @Component
 public class ListingExtractor {
 
-    private static final String LISTINGS_PARENT_OLD = "/html/body/div[2]/div/div/div/section/main/div/div[1]/div[2]/div[1]/div[3]/div/div[2]/div";
     private static final String LISTINGS_PARENT = "//div[contains(@class,'border-light-2 mb-4 border-b pb-4')]";
     private static final String LISTING_URL_XPATH = "div/div/div/div[1]/div[1]/a";
     private static final String LISTING_TITLE_XPATH = "div/div/div/div[1]/div[1]/a/h2";

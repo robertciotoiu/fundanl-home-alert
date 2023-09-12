@@ -71,4 +71,14 @@ public class Listing {
     public int hashCode() {
         return url != null ? url.hashCode() : 0;
     }
+
+    @Override
+    public String toString() {
+        return "Listing: \n" +
+                "\turl='" + url + "'\n" +
+                "\ttitle='" + title + "'\n" +
+                "\tprice='" + price + "'\n" +
+                "\tlocation='" + location + "'\n" +
+                "\tsurface='" + surface + "'\n";
+    }
 }

@@ -2,29 +2,20 @@ package com.robertciotoiu.connection;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.Random;
 
 import static java.time.Instant.now;
 
-/**
- * Wrapper over Jsoup library.
- * Must be used for every access to a URL.
- * To use: @Autowire this component
- * Ensures even in a multithreading environment the awaiting between HTTP requests.
- */
-@Component
-public class JsoupWrapper {
+public abstract class AbstractClient {
     private static final Random random = new Random();
-    private static final Logger logger = LogManager.getLogger(JsoupWrapper.class);
+    private static final Logger logger = LogManager.getLogger(AbstractClient.class);
 
     /**
      * Use this method for a responsible scraping.
-     * It ensures to access a link every 2-5 seconds.
+     * It enforces delay access to a URL to be at least 1-2 seconds from each other.
      *
      * @param url URL to access and extract its HTML
      * @return HTML of the page
@@ -33,7 +24,7 @@ public class JsoupWrapper {
     public synchronized Document getHtml(String url) throws IOException, MultithreadingNotAllowedException {
         Document doc;
         try {
-            doc = Jsoup.connect(url).get();
+            doc = getDocument(url);
             detectValidation(doc);
             String time = now().toString();
             long seconds = random.nextInt(1000, 2000);
@@ -47,6 +38,8 @@ public class JsoupWrapper {
 
         return doc;
     }
+
+    public abstract Document getDocument(String url) throws IOException;
 
     private void detectValidation(Document carSpecPage) {
         if(carSpecPage.html().contains("Challenge Validation")){
