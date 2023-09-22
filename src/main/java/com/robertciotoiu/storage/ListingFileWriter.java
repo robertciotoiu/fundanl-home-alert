@@ -1,4 +1,4 @@
-package com.robertciotoiu.index;
+package com.robertciotoiu.storage;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -17,8 +17,8 @@ import java.util.List;
 @Component
 public class ListingFileWriter {
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
-    private final JsonFactory jsonFactory = new JsonFactory();
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final JsonFactory jsonFactory = new JsonFactory();
 
     @Value("${file.path}")
     private String filePath;
@@ -30,7 +30,7 @@ public class ListingFileWriter {
         file = Paths.get(filePath, "listings.json").toFile();
     }
 
-    public void appendListingsToFile(List<Listing> listings) {
+    public boolean appendListingsToFile(List<Listing> listings) {
         try (FileWriter fileWriter = new FileWriter(file, true);
              JsonGenerator jsonGenerator = jsonFactory.createGenerator(fileWriter)) {
 
@@ -41,10 +41,12 @@ public class ListingFileWriter {
             }
 
             System.out.println(listings.size() + " listings appended to " + filePath);
+            return true;
 
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("Error appending listings to file: " + e.getMessage());
+            return false;
         }
     }
 }

@@ -1,10 +1,11 @@
 package com.robertciotoiu;
 
 import com.robertciotoiu.connection.AbstractClient;
-import com.robertciotoiu.index.ListingFileWriter;
 import com.robertciotoiu.notification.Notifier;
+import com.robertciotoiu.storage.ListingFileWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +18,9 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 public class HomeAlerterService {
-    private static final String FUNDA_HTML="https://www.funda.nl/zoeken/huur?selected_area=%5B%22amsterdam,30km%22%5D&price=%22-1500%22&object_type=%5B%22house%22,%22apartment%22%5D&sort=%22date_down%22&floor_area=%2250-%22";
+
+    @Value("${notification.url}")
+    private String FUNDA_HTML;
 
     @Autowired
     @Qualifier("seleniumClient")

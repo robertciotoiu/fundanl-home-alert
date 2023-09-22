@@ -1,9 +1,9 @@
 package com.robertciotoiu.connection;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -21,7 +21,7 @@ public class SeleniumClient extends AbstractClient{
         chromeOptions.addArguments("--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 13_5_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36");
 
         // Create a new ChromeDriver instance with desired capabilities
-        WebDriver driver = new ChromeDriver();
+        WebDriver driver = WebDriverManager.chromedriver().create();
 
         // Navigate to a webpage
         driver.get(url);

@@ -1,6 +1,7 @@
-package com.robertciotoiu.index;
+package com.robertciotoiu.storage;
 
 import com.robertciotoiu.Listing;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,8 +24,6 @@ class ListingFileWriterTest {
         listings.add(new Listing("testUrl2", "testTitle2", "testPrice2", "testLocation2","testSurface2"));
         listings.add(new Listing("testUrl3", "testTitle3", "testPrice3", "testLocation3","testSurface3"));
 
-        listingFileWriter.appendListingsToFile(listings);
-
-        System.out.println("Success!");
+        Assertions.assertTrue(listingFileWriter.appendListingsToFile(listings));
     }
 }
