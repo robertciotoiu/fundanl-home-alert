@@ -1,5 +1,6 @@
 package com.robertciotoiu.connection;
 
+import com.robertciotoiu.Listing;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -21,5 +22,10 @@ public class JsoupClient extends AbstractClient{
         return Jsoup.connect(url)
                 .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36")
                 .get();
+    }
+
+    @Override
+    public boolean applyToListing(Listing listing) {
+        throw new RuntimeException("Feature not supported");
     }
 }

@@ -18,6 +18,9 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 public class HomeAlerterService {
+    @Autowired
+    ListingFileWriter listingFileWriter;
+    Map<String, Listing> cache = new HashMap<>();
 
     @Value("${notification.url}")
     private String FUNDA_HTML;
@@ -30,12 +33,9 @@ public class HomeAlerterService {
     private Notifier notifier;
     @Autowired
     private ListingExtractor listingExtractor;
-    @Autowired
-    ListingFileWriter listingFileWriter;
-    Map<String, Listing> cache = new HashMap<>();
     private boolean isWarmup = true;
 
-    @Scheduled(fixedDelayString = "${scheduler.fixed-delay}", timeUnit = TimeUnit.MINUTES)
+    @Scheduled(fixedDelayString = "${scheduler.fixed-delay}", initialDelayString = "${scheduler.initialDelay}", timeUnit = TimeUnit.MINUTES)
     private void scrape() throws IOException {
         var doc = client.getHtml(FUNDA_HTML);
         var newListings = listingExtractor.extractListings(doc);
@@ -50,17 +50,27 @@ public class HomeAlerterService {
 
         storeListings(listingsToNotify);
         sendNotification(listingsToNotify);
+//        applyToListings(listingsToNotify);//TODO: not working because of captcha
         cleanupCache(newListings);
     }
 
+    private void applyToListings(List<Listing> listingsToNotify) {
+        if (!listingsToNotify.isEmpty() && !isWarmup) {
+            listingsToNotify.forEach(listing -> {
+                var applicationResult = client.applyToListing(listing);
+                System.out.println(applicationResult ? "Applied to listing " + listing.getUrl() : "Failed to apply to listing " + listing.getUrl());
+            });
+        }
+    }
+
     private void storeListings(ArrayList<Listing> listingsToNotify) {
-        if(!listingsToNotify.isEmpty() && !isWarmup) {
+        if (!listingsToNotify.isEmpty() && !isWarmup) {
             listingFileWriter.appendListingsToFile(listingsToNotify);
         }
     }
 
     private void sendNotification(List<Listing> listingsToNotify) {
-        if(!listingsToNotify.isEmpty() && !isWarmup) {
+        if (!listingsToNotify.isEmpty() && !isWarmup) {
             notifier.notify(listingsToNotify);
             System.out.println("Notified about " + listingsToNotify.size() + " new listings!");
         }
@@ -69,7 +79,7 @@ public class HomeAlerterService {
     }
 
     private void cleanupCache(List<Listing> listings) {
-        if(cache.size() > 100) {
+        if (cache.size() > 100) {
             cache.clear();
             listings.forEach(listing -> cache.put(listing.getUrl(), listing));
             System.out.println("Cache cleaned up!");

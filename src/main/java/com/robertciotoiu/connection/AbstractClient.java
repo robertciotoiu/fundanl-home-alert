@@ -1,5 +1,6 @@
 package com.robertciotoiu.connection;
 
+import com.robertciotoiu.Listing;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jsoup.nodes.Document;
@@ -40,6 +41,7 @@ public abstract class AbstractClient {
     }
 
     public abstract Document getDocument(String url) throws IOException;
+    public abstract boolean applyToListing(Listing listing);
 
     private void detectValidation(Document carSpecPage) {
         if(carSpecPage.html().contains("Challenge Validation")){
@@ -47,4 +49,5 @@ public abstract class AbstractClient {
             throw new CaptchaValidationError("Validation captcha required. Stopping the scraper...");
         }
     }
+
 }
