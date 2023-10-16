@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fundanl-home-alert-configmap
+  labels:
+    app: fundanl-home-alert
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: fundanl-home-alert
+    template:
+      metadata:
+        labels:
+          app: fundanl-home-alert
+      spec:
+        containers:
+        - name: fundanl-home-alert
+          image: fundanl-home-alert:latest
+          ports:
+          - containerPort: 8080
+          env:
+            - name: NOTIFICATION_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: fundanl-home-alert-config
+                  key: NOTIFICATION_URL
+            - name: FILE_PATH
+              valueFrom:
+                  configMapKeyRef:
+                  name: fundanl-home-alert-config
+                  key: FILE_PATH
+            - name: SCHEDULER_FIXED_DELAY
+              valueFrom:
+                  configMapKeyRef:
+                  name: fundanl-home-alert-config
+                  key: SCHEDULER_FIXED_DELAY
+            - name: SPRING_MAIL_HOST
+              valueFrom:
+                  configMapKeyRef:
+                  name: fundanl-home-alert-config
+                  key: SPRING_MAIL_HOST
+            - name: SPRING_MAIL_PORT
+              valueFrom:
+                  configMapKeyRef:
+                  name: fundanl-home-alert-config
+                  key: SPRING_MAIL_PORT
+            - name: SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH
+              valueFrom:
+                  configMapKeyRef:
+                  name: fundanl-home-alert-config
+                  key: SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH
+            - name: SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE
+              valueFrom:
+                  configMapKeyRef:
+                  name: fundanl-home-alert-config
+                  key: SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE
+            - name: SPRING_MAIL_USERNAME
+              valueFrom:
+                  secretKeyRef:
+                  name: fundanl-home-alert-secret
+                  key: SPRING_MAIL_USERNAME
+            - name: SPRING_MAIL_PASSWORD
+              valueFrom:
+                  secretKeyRef:
+                  name: fundanl-home-alert-secret
+                  key: SPRING_MAIL_PASSWORD
+            - name: MAIL_TO
+              valueFrom:
+                  secretKeyRef:
+                  name: fundanl-home-alert-secret
+                  key: MAIL_TO

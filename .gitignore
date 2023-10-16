@@ -37,3 +37,4 @@ out/
 ## OS X
 ##############################
 .DS_Store
+/k8s/secret.yaml
