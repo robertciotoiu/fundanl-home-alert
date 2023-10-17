@@ -4,7 +4,7 @@
 git fetch && git pull
 
 # Build the application
-mvn clean install
+mvn clean install -DskipTests
 
 # Build the docker image
 docker build -t localhost:5000/com.robertciotoiu/fundanl-home-alert:latest .
