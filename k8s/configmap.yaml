@@ -4,7 +4,7 @@ metadata:
   name: fundanl-home-alert-config
 data:
   NOTIFICATION_URL: "https://www.funda.nl/zoeken/huur?selected_area=%5B%22amsterdam,15km%22%5D&price=%22-1500%22&sort=%22date_down%22"
-  FILE_PATH: "/home/rserver/data/funda-nl-data/funda-nl-data.json"
+  FILE_PATH: "/home/rserver/data/funda-nl-data"
   SCHEDULER_FIXED_DELAY: "1"
   SPRING_MAIL_HOST: "smtp.gmail.com"
   SPRING_MAIL_PORT: "587"

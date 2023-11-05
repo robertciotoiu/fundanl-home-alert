@@ -39,6 +39,10 @@ public class HomeAlerterService {
     private void scrape() throws IOException {
         var doc = client.getHtml(FUNDA_HTML);
         var newListings = listingExtractor.extractListings(doc);
+        if(newListings.size() == 0){
+            System.err.println("No new listings found!");
+            return;
+        }
         var listingsToNotify = new ArrayList<Listing>();
 
         newListings.forEach(newListing -> {

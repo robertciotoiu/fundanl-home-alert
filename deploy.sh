@@ -13,6 +13,7 @@ docker build -t localhost:5000/com.robertciotoiu/fundanl-home-alert:latest .
 docker push localhost:5000/com.robertciotoiu/fundanl-home-alert:latest
 
 # Create the namespace if it doesn't exist
+kubectl delete namespace fundanl
 kubectl create namespace fundanl
 
 # Deploy the configmap and secret
